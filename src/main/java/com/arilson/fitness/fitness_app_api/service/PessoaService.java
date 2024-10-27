@@ -12,8 +12,12 @@ import java.util.*;
 @Service
 public class PessoaService {
 
+    private final IPessoaRepository pessoaRepository ;
+
     @Autowired
-    private IPessoaRepository pessoaRepository;
+    public PessoaService(IPessoaRepository pessoaRepository) {
+        this.pessoaRepository = pessoaRepository;
+    }
 
     public List<Pessoa> findAll() {
         return pessoaRepository.findAll();

@@ -4,6 +4,7 @@ import com.arilson.fitness.fitness_app_api.model.Usuario;
 import com.arilson.fitness.fitness_app_api.repository.IUsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -12,8 +13,14 @@ import java.util.List;
 @Service
 public class UsuarioService {
 
+    private final IUsuarioRepository usuarioRepository;
+    private final PasswordEncoder passwordEncoder;
+
     @Autowired
-    private IUsuarioRepository usuarioRepository;
+    public UsuarioService(IUsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
+        this.usuarioRepository = usuarioRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public List<Usuario> findAll() {
         return usuarioRepository.findAll();
@@ -25,6 +32,8 @@ public class UsuarioService {
     }
 
     public Usuario save(Usuario usuario) {
+        String senhaCriptografada = passwordEncoder.encode(usuario.getSenha());
+        usuario.setSenha(senhaCriptografada);
         return usuarioRepository.save(usuario);
     }
 
